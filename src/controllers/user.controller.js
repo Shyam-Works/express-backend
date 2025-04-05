@@ -163,7 +163,9 @@ const loginUser = asyncHandler(async (req,res)=>{
     const options = {
         // now only modified by server not by frontend
         httpOnly: true,
-        secure: true
+        secure: true,
+        sameSite: "None", // VERY IMPORTANT for cross-site cookies
+        maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days (optional but good to have)
     }
     return res
     .status(200).cookie("accessToken", accessToken, options)
