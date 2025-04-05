@@ -5,11 +5,18 @@ import cookieParser from "cookie-parser";
 // Create Express app
 const app = express();
 
-// CORS Configuration
+const allowedOrigins = process.env.CORS_ORIGIN?.split(",") || [];
+
 app.use(cors({
-    origin: process.env.CORS_ORIGIN, // Allow specific origins
-    credentials: true // Enable cookies and authentication headers
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.includes("*") || allowedOrigins.includes(origin)) {
+            return callback(null, true);
+        }
+        return callback(new Error("CORS Not Allowed"));
+    },
+    credentials: true
 }));
+
 
 // Middleware
 app.use(express.json({ limit: "16kb" })); // Limit JSON request body
